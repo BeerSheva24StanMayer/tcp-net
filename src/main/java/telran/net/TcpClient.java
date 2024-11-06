@@ -6,14 +6,13 @@ import java.time.Instant;
 
 import org.json.JSONObject;
 
-import static telran.net.TCPCongigurationProperties.*;
+import static telran.net.TcpConfigurationProperties.*;
 
 public class TcpClient implements Closeable {
     Socket socket;
     PrintStream writer;
     BufferedReader reader;
     int interval;
-    int nAttempts;
     int nTrials;
     String host;
     int port;
@@ -38,7 +37,7 @@ public class TcpClient implements Closeable {
                 writer = new PrintStream(socket.getOutputStream());
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 count = 0;
-            } catch (Exception e) {
+            } catch (IOException e) {
                 waitForInterval();
                 count--;
             }
@@ -53,12 +52,11 @@ public class TcpClient implements Closeable {
 
     @Override
     public void close() throws IOException {
-        socket.close();
+       socket.close();
     }
-
-    String SendAndRreceive(String requestType, String requestData) {
+    public String sendAndReceive(String requestType, String requestData) {
         Request request = new Request(requestType, requestData);
-        
+       
         try {
             writer.println(request);
             String responseJSON = reader.readLine();
@@ -72,7 +70,6 @@ public class TcpClient implements Closeable {
         } catch (IOException e) {
             throw new RuntimeException("Server is unavailable");
         }
-
     }
 
 }
