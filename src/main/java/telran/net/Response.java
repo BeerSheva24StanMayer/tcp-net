@@ -10,4 +10,8 @@ public record Response(ResponseCode responseCode, String responseData) {
             jsonObj.put(RESPONSE_DATA_FIELD, responseData);
             return jsonObj.toString();
         }
+
+        public boolean isSucceed() {
+            return responseCode.equals(ResponseCode.OK);
+        }
     }
